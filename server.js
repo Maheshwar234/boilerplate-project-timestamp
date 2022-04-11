@@ -23,6 +23,35 @@ app.get("/", function (req, res) {
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
+app.get("/api/timestamp/:date_string?", (req, res) => {
+  let reqDateString = req.params.date_string
+  let reqDateStringIsStringType = false;
+  if(reqDateString !== undefined ) {
+    reqDateStringIsStringType = reqDateString.includes("-")
+  }
+  if(reqDateString === undefined ) {
+    reqDateString = new Date();
+  }
+  //console.log("reqDateStringIsStringType is true",reqDateStringIsStringType)
+  if(reqDateStringIsStringType === false ) {
+    reqDateString = Number(reqDateString)
+  }
+  //console.log("type of reqDateString ",typeof(reqDateString))
+  const date = new Date(reqDateString)
+  const unixDate = date.getTime();
+  const utcDate = date.toUTCString();
+  //console.log("here is the date", date);
+  if( utcDate === "Invalid Date") {
+    res.send({
+      "error" : "Invalid Date"
+    })
+  }
+  res.send({
+    "unix" : unixDate,  
+    "utc" : utcDate
+  });
+})
+
 
 
 
